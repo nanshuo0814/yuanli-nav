@@ -196,7 +196,7 @@ npm run check-links
 在 `.env.local` 中设置（可选）：
 
 ```bash
-NEXT_PUBLIC_GITHUB_ISSUES_URL=https://github.com/your/repo/issues/new
+NEXT_PUBLIC_GITHUB_ISSUES_URL=https://github.com/nanshuo0814/yuanli-nav/issues/new
 NEXT_PUBLIC_FEISHU_FORM_URL=https://your.feishu.cn/share/base/form/...
 ```
 

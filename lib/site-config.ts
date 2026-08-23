@@ -7,7 +7,7 @@ export const siteConfig = {
   /** GitHub Issues 反馈（新建 Issue） */
   githubIssuesUrl:
     process.env.NEXT_PUBLIC_GITHUB_ISSUES_URL ||
-    "https://github.com/yuanli-nav/yuanli-nav/issues/new",
+    "https://github.com/nanshuo0814/yuanli-nav/issues/new",
   /** 飞书表单（可选，有则「我要收录」优先走飞书） */
   feishuFormUrl: process.env.NEXT_PUBLIC_FEISHU_FORM_URL || "",
   /** 每页资源数选项 */
