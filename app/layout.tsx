@@ -6,6 +6,8 @@ import { ScrollToTop } from "@/components/scroll-to-top";
 import { GlobalShortcuts } from "@/components/global-shortcuts";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@/components/analytics";
+import { NavigationLoader } from "@/components/navigation-loader";
+import { PageContainer } from "@/components/page-container";
 import { PwaRegister } from "@/components/pwa-register";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
@@ -90,9 +92,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-screen flex flex-col`}
       >
         <ThemeProvider>
+          <NavigationLoader />
           <Header />
-          <main className="flex-1 container mx-auto px-4 py-6">
-            {children}
+          <main className="flex-1 w-full">
+            <PageContainer className="py-6 sm:py-8">{children}</PageContainer>
           </main>
           <Footer />
           <ScrollToTop />

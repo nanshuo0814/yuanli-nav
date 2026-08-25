@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import {
   Check,
   Copy,
@@ -9,6 +10,7 @@ import {
   Flag,
   Star,
   AlertTriangle,
+  ChevronRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,10 +28,17 @@ import Image from "next/image";
 interface ResourceCardProps {
   resource: Resource;
   searchQuery?: string;
+  /** 紧凑模式：用于详情页同类推荐等窄容器 */
+  compact?: boolean;
 }
 
 /** 资源卡片：点击进详情页，外链/收藏/报错独立操作 */
-export function ResourceCard({ resource, searchQuery }: ResourceCardProps) {
+export function ResourceCard({
+  resource,
+  searchQuery,
+  compact = false,
+}: ResourceCardProps) {
+  const router = useRouter();
   const { isFavorite, toggleFavorite, mounted } = useFavorites();
   const { recordVisit } = useHistory();
   const [copied, setCopied] = useState(false);
@@ -66,33 +75,77 @@ export function ResourceCard({ resource, searchQuery }: ResourceCardProps) {
     window.open(getBrokenLinkReportUrl(resource), "_blank", "noopener,noreferrer");
   };
 
-  return (
-    <Link
-      href={`/resource/${resource.id}/`}
-      className="group block"
-      onClick={() => recordVisit(resource.id)}
-    >
-      <article
-        className={cn(
-          "relative flex flex-col h-full rounded-xl border bg-card p-4 transition-all duration-200",
-          "hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5",
-          resource.isBroken && "opacity-60 grayscale"
-        )}
-      >
-        {resource.isBroken && (
-          <Badge
-            variant="destructive"
-            className="absolute -top-2 left-3 text-[10px] px-1.5 py-0 z-10"
-          >
-            可能失效
-          </Badge>
-        )}
-        {resource.isRecommended && !resource.isBroken && (
-          <Badge className="absolute -top-2 right-3 text-[10px] px-1.5 py-0">
-            推荐
-          </Badge>
-        )}
+  const goTag = (e: React.MouseEvent, tag: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/tag/${tagToSlug(tag)}/`);
+  };
 
+  if (compact) {
+    return (
+      <Link
+        href={`/resource/${resource.id}/`}
+        className="group flex items-center gap-3 rounded-xl border bg-card p-3 transition-all hover:border-primary/40 hover:shadow-sm hover:bg-accent/30"
+        onClick={() => recordVisit(resource.id)}
+      >
+        <div className="relative h-11 w-11 shrink-0 rounded-lg border bg-muted overflow-hidden">
+          <Image
+            src={getFaviconUrl(resource.url)}
+            alt=""
+            width={44}
+            height={44}
+            className="object-contain p-1.5"
+            loading="lazy"
+            unoptimized
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">
+            {resource.title}
+          </p>
+          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+            {resource.description}
+          </p>
+          <p className="text-[11px] text-muted-foreground mt-1">
+            {getCategoryName(resource.category)} ·{" "}
+            {getSubCategoryName(resource.category, resource.subCategory)}
+          </p>
+        </div>
+        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+      </Link>
+    );
+  }
+
+  return (
+    <article
+      className={cn(
+        "group relative flex flex-col h-full rounded-xl border bg-card p-4 transition-all duration-200",
+        "hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5",
+        resource.isBroken && "opacity-60 grayscale"
+      )}
+    >
+      <Link
+        href={`/resource/${resource.id}/`}
+        className="absolute inset-0 z-0 rounded-xl"
+        aria-label={`查看 ${resource.title}`}
+        onClick={() => recordVisit(resource.id)}
+      />
+
+      {resource.isBroken && (
+        <Badge
+          variant="destructive"
+          className="absolute -top-2 left-3 text-[10px] px-1.5 py-0 z-10 pointer-events-none"
+        >
+          可能失效
+        </Badge>
+      )}
+      {resource.isRecommended && !resource.isBroken && (
+        <Badge className="absolute -top-2 right-3 text-[10px] px-1.5 py-0 z-10 pointer-events-none">
+          推荐
+        </Badge>
+      )}
+
+      <div className="relative z-10 flex flex-col h-full pointer-events-none">
         <div className="flex items-start gap-3 mb-3">
           <div className="relative h-10 w-10 shrink-0 rounded-lg border bg-muted overflow-hidden">
             <Image
@@ -106,15 +159,15 @@ export function ResourceCard({ resource, searchQuery }: ResourceCardProps) {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors">
+            <h3 className="font-semibold text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
               <HighlightText text={resource.title} query={searchQuery} />
             </h3>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
+            <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
               {getCategoryName(resource.category)} ·{" "}
               {getSubCategoryName(resource.category, resource.subCategory)}
             </p>
           </div>
-          <div className="flex shrink-0 gap-0.5">
+          <div className="flex shrink-0 gap-0.5 pointer-events-auto">
             <Button
               variant="ghost"
               size="icon"
@@ -158,28 +211,29 @@ export function ResourceCard({ resource, searchQuery }: ResourceCardProps) {
         {resource.isBroken && (
           <p className="text-[11px] text-destructive mb-2 flex items-center gap-1">
             <AlertTriangle className="h-3 w-3" />
-            链接可能已失效，点击卡片查看详情或反馈
+            链接可能已失效，点击查看详情或反馈
           </p>
         )}
 
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-border/50 gap-2">
-          <div className="flex flex-wrap gap-1 min-w-0">
+          <div className="flex flex-wrap gap-1 min-w-0 pointer-events-auto">
             {resource.tags.slice(0, 3).map((tag) => (
-              <Link
+              <button
                 key={tag}
-                href={`/tag/${tagToSlug(tag)}/`}
-                onClick={(e) => e.stopPropagation()}
+                type="button"
+                className="inline-flex"
+                onClick={(e) => goTag(e, tag)}
               >
                 <Badge
                   variant="secondary"
-                  className="text-[10px] px-1.5 py-0 font-normal hover:bg-accent"
+                  className="text-[10px] px-1.5 py-0 font-normal hover:bg-accent cursor-pointer"
                 >
                   <HighlightText text={tag} query={searchQuery} />
                 </Badge>
-              </Link>
+              </button>
             ))}
           </div>
-          <div className="flex items-center gap-0.5 shrink-0">
+          <div className="flex items-center gap-0.5 shrink-0 pointer-events-auto">
             <Button
               variant="ghost"
               size="icon"
@@ -206,7 +260,7 @@ export function ResourceCard({ resource, searchQuery }: ResourceCardProps) {
         <time className="sr-only" dateTime={resource.createdAt}>
           {formatDate(resource.createdAt)}
         </time>
-      </article>
-    </Link>
+      </div>
+    </article>
   );
 }

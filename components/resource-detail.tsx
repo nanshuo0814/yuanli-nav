@@ -55,7 +55,7 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
   };
 
   return (
-    <div className="space-y-10 max-w-4xl mx-auto">
+    <div className="space-y-10 max-w-4xl mx-auto w-full">
       <Link
         href={`/category/${resource.category}/`}
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -105,7 +105,10 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {resource.tags.map((tag) => (
                   <Link key={tag} href={`/tag/${tagToSlug(tag)}/`}>
-                    <Badge variant="secondary" className="font-normal hover:bg-accent">
+                    <Badge
+                      variant="secondary"
+                      className="font-normal hover:bg-accent cursor-pointer"
+                    >
                       {tag}
                     </Badge>
                   </Link>
@@ -192,9 +195,12 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
       </section>
 
       {similar.length > 0 && (
-        <section>
-          <h2 className="text-lg font-semibold mb-4">同类推荐</h2>
-          <ResourceGrid resources={similar} />
+        <section className="rounded-2xl border bg-muted/20 p-5 sm:p-6">
+          <h2 className="text-lg font-semibold mb-1">同类推荐</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            与「{resource.title}」同分类或标签相近的资源
+          </p>
+          <ResourceGrid resources={similar.slice(0, 6)} compact />
         </section>
       )}
     </div>

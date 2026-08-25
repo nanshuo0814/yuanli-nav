@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site-config";
 export function Footer() {
   return (
     <footer className="border-t bg-muted/30 mt-auto">
-      <div className="container mx-auto px-4 py-8 space-y-4">
+      <div className="page-container py-8 sm:py-10 space-y-4">
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground justify-center sm:justify-start">
           <Link href="/collection/" className="hover:text-foreground">
             编辑精选

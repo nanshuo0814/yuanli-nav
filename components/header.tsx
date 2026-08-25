@@ -35,7 +35,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
+      <div className="page-container flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Zap className="h-4 w-4" />
@@ -96,7 +96,7 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <nav className="md:hidden border-t bg-background px-4 py-2 space-y-1">
+        <nav className="md:hidden border-t bg-background page-container py-2 space-y-1">
           {navItems.map((item) => (
             <Link
               key={item.href}
