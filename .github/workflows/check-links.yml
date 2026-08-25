@@ -1,0 +1,176 @@
+# 定时检测资源链接可用性
+# 每周一北京时间 10:00（UTC 02:00）跑全量检测，也可手动触发
+
+name: Check Links
+
+on:
+  schedule:
+    # 每周一 02:00 UTC = 北京时间 10:00
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "仅检测前 N 条（0 = 全部）"
+        required: false
+        default: "0"
+      concurrency:
+        description: "并发数"
+        required: false
+        default: "8"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: check-links
+  cancel-in-progress: false
+
+jobs:
+  check-links:
+    name: Scan resource URLs
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run link checker
+        id: check
+        env:
+          LIMIT: ${{ github.event.inputs.limit || '0' }}
+          CONCURRENCY: ${{ github.event.inputs.concurrency || '8' }}
+        run: |
+          ARGS="--concurrency=${CONCURRENCY}"
+          if [ "${LIMIT}" != "0" ] && [ -n "${LIMIT}" ]; then
+            ARGS="${ARGS} --limit=${LIMIT}"
+          fi
+          echo "Running: node scripts/check-links.mjs ${ARGS}"
+          node scripts/check-links.mjs ${ARGS}
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: broken-links-report
+          path: |
+            data/broken-links.ts
+            data/broken-links-report.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Detect broken-links changes
+        id: diff
+        run: |
+          if git diff --quiet -- data/broken-links.ts; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "broken-links.ts 无变化"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "broken-links.ts 有更新"
+            git --no-pager diff --stat -- data/broken-links.ts
+          fi
+
+      - name: Commit updated broken-links.ts
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/broken-links.ts
+          git commit -m "chore: update broken link list from scheduled check"
+          git push
+
+      - name: Create or update summary issue
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'data/broken-links-report.json';
+            if (!fs.existsSync(reportPath)) {
+              core.warning('报告文件不存在，跳过 Issue 更新');
+              return;
+            }
+            const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const title = '🔗 链接检测报告（自动更新）';
+
+            let body = [
+              `> 由 [Check Links](${runUrl}) 自动生成 · ${report.checkedAt}`,
+              '',
+              `| 指标 | 数值 |`,
+              `| --- | --- |`,
+              `| 检测总数 | ${report.total} |`,
+              `| 失效数量 | ${report.brokenCount} |`,
+              `| 可用率 | ${(((report.total - report.brokenCount) / report.total) * 100).toFixed(1)}% |`,
+              '',
+            ];
+
+            if (report.brokenCount > 0) {
+              body.push('### 失效链接（最多 50 条）', '');
+              body.push('| ID | 标题 | 状态 | URL |');
+              body.push('| --- | --- | --- | --- |');
+              for (const b of report.broken.slice(0, 50)) {
+                const t = String(b.title || '').replace(/\|/g, '\\|');
+                body.push(`| \`${b.id}\` | ${t} | ${b.status || b.error || 'error'} | ${b.url} |`);
+              }
+              if (report.brokenCount > 50) {
+                body.push('', `_其余 ${report.brokenCount - 50} 条见本次 run 的 Artifact。_`);
+              }
+            } else {
+              body.push('✅ 本次检测未发现失效链接。');
+            }
+
+            body.push(
+              '',
+              '---',
+              '前端会根据 `data/broken-links.ts` 灰显失效资源。',
+              '可手动触发：Actions → **Check Links** → Run workflow'
+            );
+
+            const issueBody = body.join('\n');
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'link-check',
+              per_page: 10,
+            });
+
+            const existing = issues.find((i) => i.title === title);
+            if (existing) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body: issueBody,
+              });
+              core.info(`已更新 Issue #${existing.number}`);
+            } else {
+              // 标签不存在时先创建
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'link-check',
+                  color: 'd73a4a',
+                  description: '定时链接检测报告',
+                });
+              } catch (e) {
+                // 已存在则忽略
+              }
+              const { data: created } = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body: issueBody,
+                labels: ['link-check'],
+              });
+              core.info(`已创建 Issue #${created.number}`);
+            }

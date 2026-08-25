@@ -191,6 +191,14 @@ npm run check-links
 
 脚本会检测资源 URL 可达性，结果写入 `data/broken-links.ts`，前端自动灰显失效资源。
 
+#### GitHub Actions 定时检测
+
+仓库已配置工作流 [`.github/workflows/check-links.yml`](.github/workflows/check-links.yml)：
+
+- **定时**：每周一北京时间 10:00（UTC 02:00）全量检测
+- **手动**：Actions → **Check Links** → Run workflow（可限制条数 / 并发）
+- **结果**：更新 `data/broken-links.ts` 并自动提交；同步维护带 `link-check` 标签的汇总 Issue；报告上传为 Artifact
+
 ### 反馈入口配置
 
 在 `.env.local` 中设置（可选）：
