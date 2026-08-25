@@ -1,0 +1,36 @@
+name: 链接失效
+description: 反馈资源链接打不开或内容已变更
+title: "[失效] "
+labels:
+  - broken-link
+body:
+  - type: input
+    id: resource_id
+    attributes:
+      label: 资源 ID
+      placeholder: 如 p001
+  - type: input
+    id: title
+    attributes:
+      label: 资源标题
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: 失效链接
+    validations:
+      required: true
+  - type: checkboxes
+    id: problem
+    attributes:
+      label: 问题类型
+      options:
+        - label: 打不开 / 404
+        - label: 域名过期
+        - label: 内容已变更
+        - label: 其他
+  - type: textarea
+    id: notes
+    attributes:
+      label: 补充说明

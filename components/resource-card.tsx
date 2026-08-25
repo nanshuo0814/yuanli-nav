@@ -13,11 +13,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HighlightText } from "@/components/highlight-text";
+import { FolderPicker } from "@/components/folder-picker";
 import { useFavorites } from "@/hooks/use-favorites";
 import { useHistory } from "@/hooks/use-history";
 import { getCategoryName, getSubCategoryName } from "@/data/categories";
 import { Resource } from "@/lib/types";
 import { getBrokenLinkReportUrl } from "@/lib/site-config";
+import { tagToSlug } from "@/lib/tags";
 import { cn, formatDate, getFaviconUrl } from "@/lib/utils";
 import Image from "next/image";
 
@@ -145,6 +147,7 @@ export function ResourceCard({ resource, searchQuery }: ResourceCardProps) {
                 )}
               />
             </Button>
+            <FolderPicker resourceId={resource.id} variant="icon" />
           </div>
         </div>
 
@@ -162,13 +165,18 @@ export function ResourceCard({ resource, searchQuery }: ResourceCardProps) {
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-border/50 gap-2">
           <div className="flex flex-wrap gap-1 min-w-0">
             {resource.tags.slice(0, 3).map((tag) => (
-              <Badge
+              <Link
                 key={tag}
-                variant="secondary"
-                className="text-[10px] px-1.5 py-0 font-normal"
+                href={`/tag/${tagToSlug(tag)}/`}
+                onClick={(e) => e.stopPropagation()}
               >
-                <HighlightText text={tag} query={searchQuery} />
-              </Badge>
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0 font-normal hover:bg-accent"
+                >
+                  <HighlightText text={tag} query={searchQuery} />
+                </Badge>
+              </Link>
             ))}
           </div>
           <div className="flex items-center gap-0.5 shrink-0">

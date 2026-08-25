@@ -4,12 +4,22 @@
  */
 export const siteConfig = {
   name: "源力导航",
+  siteUrl:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://nanshuo0814.github.io/yuanli-nav",
+  /** GitHub 仓库 */
+  githubRepoUrl: "https://github.com/nanshuo0814/yuanli-nav",
   /** GitHub Issues 反馈（新建 Issue） */
   githubIssuesUrl:
     process.env.NEXT_PUBLIC_GITHUB_ISSUES_URL ||
     "https://github.com/nanshuo0814/yuanli-nav/issues/new",
   /** 飞书表单（可选，有则「我要收录」优先走飞书） */
   feishuFormUrl: process.env.NEXT_PUBLIC_FEISHU_FORM_URL || "",
+  /** Umami 统计（可选） */
+  umamiWebsiteId: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || "",
+  umamiScriptUrl: process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL || "",
+  /** Plausible 统计（可选） */
+  plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "",
   /** 每页资源数选项 */
   pageSizeOptions: [20, 40, 60] as const,
   defaultPageSize: 20,

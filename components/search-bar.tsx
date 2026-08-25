@@ -11,8 +11,11 @@ import {
   addSearchHistory,
   clearSearchHistory,
   getSearchHistory,
+  getHotSearches,
+  recordHotSearch,
   removeSearchHistory,
 } from "@/lib/search-history";
+import { DEFAULT_HOT_SEARCHES } from "@/lib/search-synonyms";
 import { cn } from "@/lib/utils";
 
 interface SearchBarProps {
@@ -41,10 +44,13 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
   ) {
     const [open, setOpen] = useState(false);
     const [history, setHistory] = useState<string[]>([]);
+    const [hotSearches, setHotSearches] = useState<string[]>([]);
     const wrapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
       setHistory(getSearchHistory());
+      const hot = getHotSearches(8);
+      setHotSearches(hot.length > 0 ? hot : DEFAULT_HOT_SEARCHES);
     }, []);
 
     useEffect(() => {
@@ -63,7 +69,9 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
     const commitSearch = (q: string) => {
       onChange(q);
       addSearchHistory(q);
+      recordHotSearch(q);
       setHistory(getSearchHistory());
+      setHotSearches(getHotSearches(8));
       setOpen(false);
     };
 
@@ -183,6 +191,26 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
                     </button>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {!value.trim() && history.length === 0 && hotSearches.length > 0 && (
+              <div className="py-1">
+                <p className="px-3 py-1.5 text-[11px] text-muted-foreground">
+                  热门搜索
+                </p>
+                <div className="flex flex-wrap gap-1.5 px-3 pb-2">
+                  {hotSearches.map((h) => (
+                    <button
+                      key={h}
+                      type="button"
+                      className="rounded-full border px-2.5 py-1 text-xs hover:bg-accent"
+                      onClick={() => commitSearch(h)}
+                    >
+                      {h}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 

@@ -60,3 +60,22 @@ export interface DimensionFilters {
   region?: "cn" | "global" | "both";
   onlyAvailable?: boolean;
 }
+
+/** 编辑精选 / 专题合集 */
+export interface Collection {
+  slug: string;
+  title: string;
+  description: string;
+  /** 手动指定资源 ID（优先） */
+  resourceIds?: string[];
+  /** 自动筛选规则 */
+  filter?: {
+    category?: string;
+    tags?: string[];
+    isRecommended?: boolean;
+    isFree?: boolean;
+    isOpenSource?: boolean;
+    region?: "cn" | "global" | "both";
+    limit?: number;
+  };
+}

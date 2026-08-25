@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>源力导航助手</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        font-family: system-ui, sans-serif;
+        width: 320px;
+        margin: 0;
+        padding: 16px;
+        background: #fafafa;
+        color: #111;
+      }
+      h1 { font-size: 16px; margin: 0 0 12px; }
+      input {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 8px;
+      }
+      .row { display: flex; gap: 8px; }
+      button, a.btn {
+        flex: 1;
+        display: block;
+        text-align: center;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        text-decoration: none;
+      }
+      .primary { background: #7c3aed; color: #fff; }
+      .outline { background: #fff; border: 1px solid #ddd; color: #111; }
+      p.hint { font-size: 11px; color: #666; margin: 10px 0 0; }
+    </style>
+  </head>
+  <body>
+    <h1>⚡ 源力导航</h1>
+    <input id="q" placeholder="搜索资源..." />
+    <div class="row">
+      <button class="primary" id="search">搜索</button>
+      <a class="btn outline" id="open" href="#" target="_blank">打开站点</a>
+    </div>
+    <div class="row" style="margin-top: 8px">
+      <button class="outline" id="submit">收录当前页</button>
+    </div>
+    <p class="hint">右键页面也可「收录到源力导航」</p>
+    <script src="popup.js"></script>
+  </body>
+</html>

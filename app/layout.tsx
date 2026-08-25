@@ -5,6 +5,9 @@ import { Footer } from "@/components/footer";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { GlobalShortcuts } from "@/components/global-shortcuts";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@/components/analytics";
+import { PwaRegister } from "@/components/pwa-register";
+import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,6 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.siteUrl),
   title: {
     default: "源力导航 - 全网优质资源聚合",
     template: "%s | 源力导航",
@@ -38,6 +42,13 @@ export const metadata: Metadata = {
     description: "发现优质网络资源，编程、AI、设计、工具、生活一站直达",
     type: "website",
     locale: "zh_CN",
+    url: siteConfig.siteUrl,
+    images: [{ url: "/og-image.svg", width: 1200, height: 630 }],
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.name,
   },
   robots: {
     index: true,
@@ -86,6 +97,8 @@ export default function RootLayout({
           <Footer />
           <ScrollToTop />
           <GlobalShortcuts />
+          <Analytics />
+          <PwaRegister />
         </ThemeProvider>
       </body>
     </html>

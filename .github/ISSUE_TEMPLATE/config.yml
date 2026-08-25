@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 查看链接检测报告
+    url: https://github.com/nanshuo0814/yuanli-nav/issues?q=label%3Alink-check
+    about: 定时任务自动更新的失效链接汇总 Issue
+  - name: 讨论与建议
+    url: https://github.com/nanshuo0814/yuanli-nav/discussions
+    about: 功能建议与非收录类讨论

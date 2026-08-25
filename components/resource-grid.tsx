@@ -53,11 +53,9 @@ export function ResourceGrid({
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {items.map((resource) => (
-          <ResourceCard
-            key={resource.id}
-            resource={resource}
-            searchQuery={searchQuery}
-          />
+          <div key={resource.id} data-resource-card data-resource-id={resource.id}>
+            <ResourceCard resource={resource} searchQuery={searchQuery} />
+          </div>
         ))}
       </div>
       {paginated && onPageChange && totalPages > 1 && (

@@ -9,8 +9,13 @@ import {
   History,
   Shuffle,
   Trash2,
+  Sparkles,
+  Layers,
+  CalendarDays,
 } from "lucide-react";
 import Link from "next/link";
+import { collections } from "@/data/collections";
+import { getDailyPicks, formatDailyPicksDate } from "@/lib/daily-picks";
 import { SearchBar } from "@/components/search-bar";
 import { SiteStats } from "@/components/site-stats";
 import { SortSelect } from "@/components/sort-select";
@@ -20,7 +25,7 @@ import { ResourceGrid } from "@/components/resource-grid";
 import { resources, getResourceById } from "@/data/resources";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useHistory } from "@/hooks/use-history";
-import { addSearchHistory } from "@/lib/search-history";
+import { addSearchHistory, recordHotSearch } from "@/lib/search-history";
 import { siteConfig } from "@/lib/site-config";
 import {
   filterResources,
@@ -117,7 +122,10 @@ function HomeContent() {
   ]);
 
   useEffect(() => {
-    if (debouncedQuery.trim()) addSearchHistory(debouncedQuery.trim());
+    if (debouncedQuery.trim()) {
+      addSearchHistory(debouncedQuery.trim());
+      recordHotSearch(debouncedQuery.trim());
+    }
   }, [debouncedQuery]);
 
   const filteredResources = useMemo(() => {
@@ -141,6 +149,8 @@ function HomeContent() {
   const recommended = useMemo(() => getRecommended(resources), []);
   const latest = useMemo(() => getLatest(resources, 8), []);
   const popularTags = useMemo(() => getPopularTags(resources, 24), []);
+  const dailyPicks = useMemo(() => getDailyPicks(resources, 8), []);
+  const dailyLabel = useMemo(() => formatDailyPicksDate(), []);
 
   const recentResources = useMemo(() => {
     if (!historyMounted) return [];
@@ -301,6 +311,55 @@ function HomeContent() {
               <ResourceGrid resources={recentResources} />
             </section>
           )}
+
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-amber-500" />
+                <div>
+                  <h2 className="text-lg font-semibold">今日源力</h2>
+                  <p className="text-[11px] text-muted-foreground">{dailyLabel}</p>
+                </div>
+              </div>
+            </div>
+            <ResourceGrid resources={dailyPicks} />
+          </section>
+
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Layers className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold">编辑精选</h2>
+              </div>
+              <Link
+                href="/collection/"
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "h-8 text-xs")}
+              >
+                全部专题
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+              {collections.slice(0, 4).map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/collection/${c.slug}/`}
+                  className="rounded-xl border bg-card p-4 hover:border-primary/40 hover:shadow-sm transition-all"
+                >
+                  <h3 className="font-medium text-sm">{c.title}</h3>
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                    {c.description}
+                  </p>
+                </Link>
+              ))}
+            </div>
+            <Link
+              href="/weekly/"
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+            >
+              <CalendarDays className="h-4 w-4" />
+              查看源力周刊 →
+            </Link>
+          </section>
 
           <section id="random-section">
             <div className="flex items-center justify-between mb-4">

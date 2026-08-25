@@ -4,6 +4,8 @@ import {
   getResourceById,
 } from "@/data/resources";
 import { getCategoryName } from "@/data/categories";
+import { siteConfig } from "@/lib/site-config";
+import { getFaviconUrl } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -26,6 +28,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${resource.title} | 源力导航`,
       description: resource.description,
       type: "website",
+      url: `${siteConfig.siteUrl.replace(/\/$/, "")}/resource/${resource.id}/`,
+      images: [
+        {
+          url: getFaviconUrl(resource.url),
+          width: 128,
+          height: 128,
+          alt: resource.title,
+        },
+        { url: "/og-image.svg", width: 1200, height: 630, alt: "源力导航" },
+      ],
     },
     keywords: [
       resource.title,

@@ -6,6 +6,7 @@ import {
   Compass,
   Heart,
   History,
+  Layers,
   Menu,
   PlusCircle,
   X,
@@ -21,6 +22,7 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "首页", icon: Compass },
+  { href: "/collection/", label: "专题", icon: Layers },
   { href: "/favorites/", label: "收藏", icon: Heart, showCount: true },
   { href: "/history/", label: "历史", icon: History },
 ];

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FolderPicker } from "@/components/folder-picker";
 import { ResourceGrid } from "@/components/resource-grid";
 import { useFavorites } from "@/hooks/use-favorites";
 import { useHistory } from "@/hooks/use-history";
@@ -23,7 +23,9 @@ import { getSimilarResources } from "@/lib/enrich";
 import { resources } from "@/data/resources";
 import { Resource } from "@/lib/types";
 import { getBrokenLinkReportUrl } from "@/lib/site-config";
+import { tagToSlug } from "@/lib/tags";
 import { cn, formatDate, getFaviconUrl } from "@/lib/utils";
+import Image from "next/image";
 
 interface ResourceDetailClientProps {
   resource: Resource;
@@ -102,9 +104,11 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
               <p className="text-sm leading-relaxed">{resource.description}</p>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {resource.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="font-normal">
-                    {tag}
-                  </Badge>
+                  <Link key={tag} href={`/tag/${tagToSlug(tag)}/`}>
+                    <Badge variant="secondary" className="font-normal hover:bg-accent">
+                      {tag}
+                    </Badge>
+                  </Link>
                 ))}
               </div>
               <a
@@ -161,6 +165,7 @@ export function ResourceDetailClient({ resource }: ResourceDetailClientProps) {
             />
             {favorited ? "已收藏" : "收藏"}
           </Button>
+          <FolderPicker resourceId={resource.id} />
           <Button variant="outline" onClick={copyLink} className="gap-1.5">
             {copied ? (
               <Check className="h-4 w-4 text-green-500" />

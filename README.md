@@ -8,24 +8,24 @@
 - **样式**: Tailwind CSS
 - **UI 组件**: shadcn/ui 风格组件
 - **数据**: 本地静态文件 (`/data/resources.ts`)
-- **个性化**: localStorage（收藏、主题）
-- **部署**: Vercel 静态导出
+- **个性化**: localStorage（收藏、主题、搜索历史）
+- **部署**: Vercel / GitHub Pages 静态导出
 
 ## 功能特性
 
 - 分类导航（一级 + 二级分类）
-- 资源卡片 + **详情页** `/resource/[id]`（完整描述、标签、同类推荐、二维码、复制链接、收藏）
-- 全局搜索：Fuse.js 模糊匹配 + 拼音首字母 + 搜索建议 + 搜索历史
+- 资源卡片 + **详情页** `/resource/[id]`
+- **编辑精选** `/collection/[slug]` · **源力周刊** `/weekly` · **今日源力**（每日确定性推荐）
+- **标签页** `/tag/[tag]` · **失效链接** `/broken`
+- 全局搜索：Fuse.js 模糊 + 拼音 + 同义词 + 热搜 + 搜索历史
 - 多维筛选：免费 / 开源 / 国内 / 海外 / 仅可用
 - 分页（20/40 条，URL 同步 `?page=&q=`）
-- 首页：热门推荐、最新收录、分类入口、标签墙、随机发现、最近浏览
-- **浏览历史** `/history`：按时间分组、单条删除
-- **收藏增强**：分组文件夹、导出/导入 JSON、导出浏览器书签 HTML、一键清空、按分类筛选
-- **反馈入口**：「我要收录」+ 链接失效反馈（GitHub Issue / 飞书表单，无需后端）
-- **失效链接检测**：`npm run check-links` 标记 `isBroken`，前端灰显提示
-- 空状态优化：联想词、热门标签、换词建议
-- 主题切换：跟随系统 / 浅色 / 深色
-- 完全响应式，移动端友好
+- 收藏增强：文件夹、详情/卡片加入文件夹、导出导入 JSON、书签 HTML
+- **PWA** 可安装 · **键盘快捷键** `/` `j` `k` `Enter` `f`
+- **SEO**：sitemap.xml · robots.txt · OG 图
+- **GitHub Actions** 定时链接检测
+- **浏览器扩展** `extension/`（搜索 + 一键收录）
+- 可选 **Umami / Plausible** 统计（env 配置）
 
 ## 快速开始
 
@@ -69,10 +69,17 @@ npx serve out
 ├── app/                    # Next.js App Router 页面
 │   ├── layout.tsx          # 根布局 + SEO
 │   ├── page.tsx            # 首页
+│   ├── collection/         # 编辑精选
+│   ├── tag/[tag]/          # 标签页
+│   ├── weekly/             # 源力周刊
+│   ├── broken/             # 失效链接
 │   ├── favorites/          # 收藏页
 │   ├── history/            # 浏览历史
 │   ├── resource/[id]/      # 资源详情页
+│   ├── sitemap.ts          # 站点地图
+│   ├── robots.ts           # robots.txt
 │   └── category/[slug]/    # 分类页
+├── extension/              # 浏览器扩展（Chrome/Edge）
 ├── components/             # React 组件
 │   ├── ui/                 # shadcn/ui 基础组件
 │   ├── header.tsx          # 顶部导航

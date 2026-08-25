@@ -1,0 +1,52 @@
+name: 资源收录
+description: 提交新的优质资源到源力导航
+title: "[收录] "
+labels:
+  - resource-submit
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢贡献！请尽量填写完整信息，方便维护者审核收录。
+  - type: input
+    id: title
+    attributes:
+      label: 资源标题
+      placeholder: 网站/工具名称
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: 资源链接
+      placeholder: https://
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 建议分类
+      options:
+        - programming
+        - ai
+        - music
+        - video
+        - software
+        - life
+        - design
+        - education
+        - news
+        - tools
+        - 不确定
+  - type: textarea
+    id: description
+    attributes:
+      label: 简介
+      description: 一句话说明这个资源有什么用
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: 推荐理由
+      description: 为什么值得收录？

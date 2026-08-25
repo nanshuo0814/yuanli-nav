@@ -49,8 +49,9 @@ export function useFavorites() {
 
   const create = useCallback(
     (name: string) => {
-      createFolder(name);
+      const folder = createFolder(name);
       refresh();
+      return folder;
     },
     [refresh]
   );

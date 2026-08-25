@@ -35,3 +35,8 @@ export function getResourcesBySubCategory(
 export function getAllResourceIds(): string[] {
   return resources.map((r) => r.id);
 }
+
+/** 失效资源 */
+export function getBrokenResources(): Resource[] {
+  return resources.filter((r) => r.isBroken);
+}

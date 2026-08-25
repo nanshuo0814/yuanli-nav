@@ -1,6 +1,7 @@
 import { pinyin } from "pinyin-pro";
 import Fuse from "fuse.js";
 import { Resource, SearchResult, DimensionFilters } from "./types";
+import { expandSearchQuery } from "./search-synonyms";
 
 /** 获取拼音首字母（如「源力导航」→ yldh） */
 export function getPinyinInitials(text: string): string {
@@ -33,13 +34,13 @@ function getFuse(resources: Resource[]): Fuse<Resource> {
   fuseSource = resources;
   fuseInstance = new Fuse(resources, {
     keys: [
-      { name: "title", weight: 0.45 },
-      { name: "description", weight: 0.25 },
+      { name: "title", weight: 0.4 },
+      { name: "description", weight: 0.22 },
       { name: "tags", weight: 0.2 },
-      { name: "category", weight: 0.05 },
-      { name: "subCategory", weight: 0.05 },
+      { name: "category", weight: 0.1 },
+      { name: "subCategory", weight: 0.08 },
     ],
-    threshold: 0.4,
+    threshold: 0.38,
     includeScore: true,
     ignoreLocation: true,
   });
@@ -57,6 +58,7 @@ export function searchResources(
   if (!trimmed) return [];
 
   const keywords = trimmed.split(/\s+/).filter(Boolean);
+  const expandedTerms = expandSearchQuery(trimmed);
   const exact: SearchResult[] = [];
   const exactIds = new Set<string>();
 
@@ -64,6 +66,7 @@ export function searchResources(
     const title = resource.title.toLowerCase();
     const desc = resource.description.toLowerCase();
     const tagStr = resource.tags.join(" ").toLowerCase();
+    const cat = resource.category.toLowerCase();
     const initials = getPinyinInitials(resource.title);
     const fullPy = getPinyinFull(resource.title);
     const matchedFields: SearchResult["matchedFields"] = [];
@@ -72,6 +75,14 @@ export function searchResources(
       const inTitle = title.includes(kw);
       const inDesc = desc.includes(kw);
       const inTags = tagStr.includes(kw);
+      const inCat = cat.includes(kw);
+      const inSynonym = expandedTerms.some(
+        (term) =>
+          title.includes(term) ||
+          desc.includes(term) ||
+          tagStr.includes(term) ||
+          cat.includes(term)
+      );
       const inPy =
         initials.includes(kw) ||
         fullPy.includes(kw) ||
@@ -79,7 +90,7 @@ export function searchResources(
       if (inTitle) matchedFields.push("title");
       if (inDesc) matchedFields.push("description");
       if (inTags) matchedFields.push("tags");
-      return inTitle || inDesc || inTags || inPy;
+      return inTitle || inDesc || inTags || inCat || inSynonym || inPy;
     });
 
     if (allMatch) {
