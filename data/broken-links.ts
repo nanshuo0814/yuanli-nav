@@ -1,7 +1,7 @@
 /**
  * 链接失效 ID 列表
- * 由 scripts/check-links.mjs 于 2026-08-25T05:36:04.587Z 生成
- * 共检测 1021 条，失效 172 条
+ * 由 scripts/check-links.mjs 于 2026-08-31T08:05:08.094Z 生成
+ * 共检测 1021 条，失效 171 条
  */
 export const brokenLinkIds: string[] = [
   "a001",
@@ -25,6 +25,7 @@ export const brokenLinkIds: string[] = [
   "ax039",
   "ax042",
   "ax053",
+  "d003",
   "d005",
   "d007",
   "d008",
@@ -47,6 +48,7 @@ export const brokenLinkIds: string[] = [
   "de038",
   "e003",
   "e008",
+  "e013",
   "e016",
   "e019",
   "e027",
@@ -65,7 +67,6 @@ export const brokenLinkIds: string[] = [
   "eb033",
   "eb035",
   "eb037",
-  "eb040",
   "ex013",
   "ex033",
   "ex035",
@@ -74,7 +75,6 @@ export const brokenLinkIds: string[] = [
   "fh042",
   "fh044",
   "gm002",
-  "gm004",
   "gm010",
   "gm016",
   "gm021",
@@ -83,7 +83,6 @@ export const brokenLinkIds: string[] = [
   "gm028",
   "gm033",
   "gm034",
-  "gm035",
   "gm036",
   "gm038",
   "l017",
