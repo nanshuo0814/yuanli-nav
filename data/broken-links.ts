@@ -1,7 +1,7 @@
 /**
  * 链接失效 ID 列表
- * 由 scripts/check-links.mjs 于 2026-08-31T08:05:08.094Z 生成
- * 共检测 1021 条，失效 171 条
+ * 由 scripts/check-links.mjs 于 2026-09-07T06:58:56.025Z 生成
+ * 共检测 1021 条，失效 173 条
  */
 export const brokenLinkIds: string[] = [
   "a001",
@@ -25,7 +25,6 @@ export const brokenLinkIds: string[] = [
   "ax039",
   "ax042",
   "ax053",
-  "d003",
   "d005",
   "d007",
   "d008",
@@ -41,7 +40,7 @@ export const brokenLinkIds: string[] = [
   "de019",
   "de024",
   "de027",
-  "de030",
+  "de028",
   "de032",
   "de033",
   "de037",
@@ -51,7 +50,6 @@ export const brokenLinkIds: string[] = [
   "e013",
   "e016",
   "e019",
-  "e027",
   "e029",
   "eb001",
   "eb002",
@@ -68,6 +66,7 @@ export const brokenLinkIds: string[] = [
   "eb035",
   "eb037",
   "ex013",
+  "ex017",
   "ex033",
   "ex035",
   "fh026",
@@ -86,8 +85,9 @@ export const brokenLinkIds: string[] = [
   "gm036",
   "gm038",
   "l017",
-  "l023",
   "l024",
+  "l026",
+  "l028",
   "l029",
   "lt012",
   "lt017",
@@ -121,6 +121,8 @@ export const brokenLinkIds: string[] = [
   "me053",
   "mx028",
   "mx031",
+  "n004",
+  "n007",
   "n009",
   "n012",
   "n014",
@@ -141,7 +143,6 @@ export const brokenLinkIds: string[] = [
   "nav031",
   "nav032",
   "nav044",
-  "nav047",
   "nav050",
   "nx012",
   "nx017",
@@ -168,6 +169,7 @@ export const brokenLinkIds: string[] = [
   "sv027",
   "sv038",
   "sv049",
+  "sx018",
   "sx019",
   "tx031",
   "tx035",
