@@ -31,4 +31,5 @@ export const aiResources: Resource[] = [
   { id: "a028", title: "Papers With Code", description: "AI 论文与代码实现对照平台", url: "https://paperswithcode.com", category: "ai", subCategory: "ai-learning", tags: ["论文", "代码", "研究"], isRecommended: true, createdAt: "2024-02-16" },
   { id: "a029", title: "Kaggle", description: "数据科学与 ML 竞赛社区", url: "https://www.kaggle.com", category: "ai", subCategory: "ai-learning", tags: ["竞赛", "数据科学", "ML"], isRecommended: true, createdAt: "2024-02-17" },
   { id: "a030", title: "Google AI Studio", description: "Gemini API 免费体验与开发", url: "https://aistudio.google.com", category: "ai", subCategory: "ai-learning", tags: ["Google", "API", "Gemini"], isRecommended: false, createdAt: "2024-02-18" },
+  { id: "a031", title: "agent-qa", description: "CLI/MCP 驱动 Web 与移动应用测试，结合 memidex 持久记忆、经验证的自我改进及截图/日志证据。需 Node.js 24+；本地包免费，模型费用另计。", url: "https://vostride.com", category: "ai", subCategory: "ai-tools", tags: ["应用测试", "CLI", "MCP", "memidex", "自我改进"], isRecommended: false, createdAt: "2026-10-31", isFree: true, region: "global" },
 ];
