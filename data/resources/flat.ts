@@ -1,6 +1,6 @@
 import { Resource } from "@/lib/types";
 
-/** 全站资源（1021 条，URL 去重） */
+/** 全站资源（1022 条，URL 去重） */
 export const resourcesFlat: Resource[] = [
   {
     "id": "p001",
@@ -1051,6 +1051,25 @@ export const resourcesFlat: Resource[] = [
     ],
     "isRecommended": false,
     "createdAt": "2024-02-18"
+  },
+  {
+    "id": "a031",
+    "title": "agent-qa",
+    "description": "CLI/MCP 驱动 Web 与移动应用测试，结合 memidex 持久记忆、经验证的自我改进及截图/日志证据。需 Node.js 24+；本地包免费，模型费用另计。",
+    "url": "https://vostride.com",
+    "category": "ai",
+    "subCategory": "ai-tools",
+    "tags": [
+      "应用测试",
+      "CLI",
+      "MCP",
+      "memidex",
+      "自我改进"
+    ],
+    "isRecommended": false,
+    "createdAt": "2026-10-31",
+    "isFree": true,
+    "region": "global"
   },
   {
     "id": "m001",
